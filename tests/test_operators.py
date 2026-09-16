@@ -1,5 +1,5 @@
 from typing import Callable, List, Tuple
-
+import minitorch.operators as operators
 import pytest
 from hypothesis import given
 from hypothesis.strategies import lists
@@ -105,47 +105,57 @@ def test_sigmoid(a: float) -> None:
     * It is always between 0.0 and 1.0.
     * one minus sigmoid is the same as sigmoid of the negative
     * It crosses 0 at 0.5
-    * It is  strictly increasing.
+    * It is strictly increasing.
     """
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError('Need to implement for Task 0.2')
-
+    sig_a = operators.sigmoid(a)
+    assert 0.0 <= sig_a <= 1.0
+    assert operators.is_close(1.0 - sig_a, operators.sigmoid(-a))
+    assert operators.is_close(operators.sigmoid(0.0), 0.5)
+    b = a + 1.0
+    assert operators.sigmoid(b) >= sig_a
 
 @pytest.mark.task0_2
 @given(small_floats, small_floats, small_floats)
 def test_transitive(a: float, b: float, c: float) -> None:
     "Test the transitive property of less-than (a < b and b < c implies a < c)"
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError('Need to implement for Task 0.2')
+    lhs = operators.lt(a, b) == 1.0
+    rhs = operators.lt(b, c) == 1.0
+    if lhs and rhs:
+        assert operators.lt(a, c) == 1.0
 
 
 @pytest.mark.task0_2
-def test_symmetric() -> None:
+@given(small_floats, small_floats)
+def test_symmetric(a: float, b: float) -> None:
     """
     Write a test that ensures that :func:`minitorch.operators.mul` is symmetric, i.e.
     gives the same value regardless of the order of its input.
     """
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError('Need to implement for Task 0.2')
+    assert operators.is_close(operators.mul(a, b), operators.mul(b, a))
 
 
 @pytest.mark.task0_2
-def test_distribute() -> None:
+@given(small_floats, small_floats, small_floats)
+def test_distribute(a: float, b: float, c: float) -> None:
     r"""
     Write a test that ensures that your operators distribute, i.e.
     :math:`z \times (x + y) = z \times x + z \times y`
     """
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError('Need to implement for Task 0.2')
+    lhs = operators.mul(c, operators.add(a, b))
+    rhs = operators.add(operators.mul(c, a), operators.mul(c, b))
+    assert operators.is_close(lhs, rhs)
 
 
 @pytest.mark.task0_2
-def test_other() -> None:
+@given(small_floats)
+def test_other(a: float) -> None:
     """
     Write a test that ensures some other property holds for your functions.
     """
     # TODO: Implement for Task 0.2.
-    raise NotImplementedError('Need to implement for Task 0.2')
+    negative_a = -abs(a)
+    assert operators.relu(negative_a) == 0.0
+    assert operators.is_close(operators.neg(operators.neg(a)), a)
 
 
 # ## Task 0.3  - Higher-order functions
