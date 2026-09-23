@@ -153,8 +153,8 @@ def test_other(a: float) -> None:
     Write a test that ensures some other property holds for your functions.
     """
     # TODO: Implement for Task 0.2.
-    negative_a = -abs(a)
-    assert operators.relu(negative_a) == 0.0
+    neg_a = -abs(a)
+    assert operators.relu(neg_a) == 0.0
     assert operators.is_close(operators.neg(operators.neg(a)), a)
 
 
@@ -183,8 +183,8 @@ def test_sum_distribute(ls1: List[float], ls2: List[float]) -> None:
     Write a test that ensures that the sum of `ls1` plus the sum of `ls2`
     is the same as the sum of each element of `ls1` plus each element of `ls2`.
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError('Need to implement for Task 0.3')
+    sum_combined = operators.sum(operators.addLists(ls1, ls2))
+    assert operators.is_close(operators.add(operators.sum(ls1), operators.sum(ls2)), sum_combined)
 
 
 @pytest.mark.task0_3
